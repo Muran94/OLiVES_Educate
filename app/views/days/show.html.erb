@@ -1,0 +1,34 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb mb-1 bg-white">
+    <li class="breadcrumb-item"><%= link_to 'Top', root_path %></li>
+    <li class="breadcrumb-item"><%= link_to 'Conference', conference_path(@day.conference) %></li>
+    <li class="breadcrumb-item">Day</li>
+  </ol>
+</nav>
+
+<h1><%= @day.title %> (<%= @day.pdate %>)</h1>
+
+<ul>
+  <% @day.tracks.each do |t| %>
+    <li>
+      <%= t.title %>
+      <ul>
+        <% t.slots&.order(:start_time).each do |s| %>
+          <li>
+            <%= s.start_time.strftime("%H:%M") %> - <%= s.end_time.strftime("%H:%M") %>
+
+            <% if s.description.blank? %>
+              <%= s.title %><br/>
+            <% else %>
+              <%= link_to s.title, slot_path(s) %><br/>
+              <% if s.lecturer.present? %>
+                発表者: <%= s.lecturer %>
+              <% end %>
+              <p><%= simple_format(s.description) %></p>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </li>
+  <% end %>
+</ul>
